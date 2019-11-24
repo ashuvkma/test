@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser; 
+using System.IO;
+
+namespace ConsoleApplication2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {//@"C:\Users\Ashutosh\Downloads\PdfParsingiTextSharp.20140310\New folder\April 2018.pdf"
+            FileStream fs = new FileStream(@"C:\Users\Ashutosh\Downloads\PdfParsingiTextSharp.20140310\New folder\Chapter1_Example1.pdf", FileMode.Create, FileAccess.Write, FileShare.None);
+
+            Document doc = new Document();
+
+            PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+
+            doc.Open();
+
+            doc.Add(new Paragraph("Hello World"));
+
+            doc.Close();
+            
+            Console.WriteLine(ReadPdfFile(@"C:\Users\Ashutosh\Downloads\PdfParsingiTextSharp.20140310\New folder\April 2018.pdf")); 
+            Console.ReadKey();
+
+
+        }
+
+        public static string ReadPdfFile(string fileName)
+        {
+            StringBuilder text = new StringBuilder();
+
+            if (File.Exists(fileName))
+            {
+                PdfReader pdfReader = new PdfReader(fileName);
+
+                for (int page = 1; page <= pdfReader.NumberOfPages; page++)
+                {
+                    ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+                    string currentText = PdfTextExtractor.GetTextFromPage(pdfReader, page, strategy);
+
+                    text.Append(currentText);
+                }
+                pdfReader.Close();
+            }
+            return text.ToString();
+        }
+
+    }
+}
