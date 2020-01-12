@@ -1,0 +1,51 @@
+Dim wb, ws As Object
+Dim cellVal,d,y as String
+y=""
+
+
+Try
+DIM rowcount,i as integer
+wb = GetWorkbook(Handle, Workbook)
+ws = GetWorksheet(Handle, Workbook, Worksheet)
+
+wb.Activate()
+ws.Activate()
+rowcount = GetWorksheet(Handle,Workbook,Worksheet).Cells.Find("*", , , , , 2).Row
+
+
+For i = 1 to rowcount
+  ws.Range("F"&i,"F"&i).Activate()
+
+ cellVal= GetInstance(Handle).ActiveCell.Value
+	'value = IIf(cellVal Is Nothing, "", cellVal)
+
+if cellVal<>"" and IsDate(cellVal) then
+'item = cellVal.Split("-")
+'d = item(0)
+'m = item(1)
+'y =item(2)
+y=Replace(Left(Year(cellVal),2),"19","20")& Right(y,2)
+d= Microsoft.VisualBasic.DateAndTime.Day(cellVal).Tostring() & "/"&Month(cellVal).ToString() &"/"& y.ToString()
+if CInt(Microsoft.VisualBasic.DateAndTime.Day(cellVal)) > 20 then
+
+ws.Range("A"&i,"F"&i).Interior.Color = RGB(127,187,199)
+
+end if
+GetInstance(handle).ActiveCell.Value = d
+Dim activeCell = GetInstance(handle).ActiveCell
+SetProperty(activeCell, "Value", d)
+
+'msgbox(item(2))
+end if
+next
+
+Success = True
+
+Catch e As Exception
+	Success = False
+	Message = e.Message
+Finally
+	wb = Nothing
+	ws = Nothing
+	
+End Try
