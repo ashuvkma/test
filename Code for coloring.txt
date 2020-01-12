@@ -49,3 +49,37 @@ Finally
 	ws = Nothing
 	
 End Try
+
+--------------------------------------------------------------------------------------------------------------------------------
+Dim NewRow As DataRow
+
+Dim co as integer
+co= 0
+dim i as integer
+i=0
+
+Collection_Out = Collection_In.Clone
+
+ for i = 0 to ConditionCollection.Rows.Count-1
+   For Each parentRow As DataRow In Collection_In.Select(GetStringValue(ConditionCollection.Rows(i), "Condition"))
+   co= co+1
+   Next
+
+If co >0 then
+For Each parentRow As DataRow In Collection_In.Select(GetStringValue(ConditionCollection.Rows(i), "Condition"))
+	NewRow = Collection_Out.NewRow
+	For Each c As DataColumn In NewRow.Table.Columns
+		NewRow(c.ColumnName) = parentRow(c.ColumnName)
+	Next
+	Collection_Out.Rows.Add(NewRow)
+Next
+if i <ConditionCollection.Rows.Count-1
+Collection_Out.Rows.Add()
+end if
+End if
+co=0
+
+Next
+
+NewRow = Nothing
+Collection_In = Nothing
